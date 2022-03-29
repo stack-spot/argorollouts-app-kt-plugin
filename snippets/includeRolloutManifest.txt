@@ -1,0 +1,6 @@
+
+        insertNamespaceRolloutManifest(namespace)
+
+        val manifests = Manifests(App(), APP_NAME, chartProps)
+        Include.Builder.create(manifests, "secretProviderClass").url("rollout.yaml").build()
+        cluster.addCdk8sChart("chart", manifests)

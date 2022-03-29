@@ -1,0 +1,38 @@
+name: "argo-rollouts-app-kt-plugin"
+description: Configure the Argo Rollouts's Manifest on project to enable the canary deploy strategy
+types:
+  - app
+languages:
+  - "kotlin"
+tags:
+  - "cdk"
+  - "argo-rollouts"
+
+hooks:
+  - type: edit
+    trigger: after-render
+    path: infra/src/main/kotlin/{{project_group_id|group_id_folder}}/{{project_name|to_camel}}CdkStack.kt
+    changes:
+      - insert:
+          line: 2
+          snippet: snippets/imports.txt
+          when:
+            not-exists: 'java.nio.file'
+      - search:
+          string: 'import org.cdk8s.ChartProps'
+          insert-after:
+            value: "import org.cdk8s.Include\n"
+          when:
+            not-exists: 'import org.cdk8s.Include'
+      - search:
+          string: 'cluster.addCdk8sChart("chart", Manifests(App(), APP_NAME, chartProps))'
+          replace-by:
+            snippet: snippets/includeRolloutManifest.txt
+          when:
+            not-exists: 'Include.Builder.create'
+      - search:
+          string: '    }'
+          insert-after:
+            snippet: snippets/funInsertNamespaceRolloutManifest.txt
+          when:
+            not-exists: 'private fun insertNamespaceRolloutManifest'

@@ -1,0 +1,14 @@
+
+    private fun insertNamespaceRolloutManifest(namespace: String) {
+        try {
+            val path = Paths.get("rollout.yaml")
+            val lines = Files.lines(path)
+            val replaced = lines.map {
+                line -> line.replace("<NAMESPACE>", namespace)
+            }.collect(Collectors.toList())
+            Files.write(path, replaced)
+            lines.close()
+        } catch (e: IOException) {
+            throw Exception("Fail to edit rollout.yaml file", e)
+        }
+    }
