@@ -1,0 +1,23 @@
+
+        val ingress = Ingress.Builder.create(this, "ingress")
+            .metadata(object : ApiObjectMetadata {
+                override fun getName(): String {
+                    return APP_NAME
+                }
+
+                override fun getAnnotations(): MutableMap<String, String> {
+                    val annotations = mutableMapOf<String, String>()
+                    annotations["kubernetes.io/ingress.class"] = "alb"
+                    annotations["alb.ingress.kubernetes.io/target-type"] = "ip"
+                    return annotations
+                }
+            })
+            .build()
+        service.exposeViaIngress(
+            "/$APP_NAME", ExposeDeploymentViaIngressOptions.Builder()
+                .name(APP_NAME)
+                .port(8080)
+                .pathType(HttpIngressPathType.PREFIX)
+                .ingress(ingress)
+                .build()
+        )

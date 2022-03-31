@@ -36,3 +36,25 @@ hooks:
             snippet: snippets/funInsertNamespaceRolloutManifest.txt
           when:
             not-exists: 'private fun insertNamespaceRolloutManifest'
+  - type: edit
+    trigger: after-render
+    path: infra/src/main/kotlin/{{project_group_id|group_id_folder}}/Manifests.kt
+    changes:
+      - search:
+          string: 'import org.cdk8s.plus22.EnvValue'
+          insert-after:
+            value: "import org.cdk8s.plus22.ExposeDeploymentViaIngressOptions\n"
+          when:
+            not-exists: 'import org.cdk8s.plus22.ExposeDeploymentViaIngressOptions'
+      - search:
+          string: 'import org.cdk8s.plus22.HttpGetProbeOptions'
+          insert-after:
+            value: "import org.cdk8s.plus22.HttpIngressPathType\nimport org.cdk8s.plus22.Ingress\n"
+          when:
+            not-exists: 'import org.cdk8s.plus22.HttpIngressPathType'
+      - search:
+          string: 'service.addSelector(selectorLabel, APP_NAME)'
+          insert-after:
+            snippet: snippets/exposeServiceViaIngress.txt
+          when:
+            not-exists: 'val ingress = Ingress.Builder.create(this, "ingress")'
