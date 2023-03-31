@@ -13,3 +13,4 @@ stk apply plugin zup-kotlin-stack/argorollouts-app-kt-plugin
 # Prerequisites
 
 This plugin is applicable in applications that were created from the template [https://github.com/stack-spot/spring-app-kt-template](https://github.com/stack-spot/spring-app-kt-template).
+
